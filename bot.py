@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 # Inicializar base de datos
 db = Database()
 
-# Horario de servicio (para pruebas 12 a 12 = 24 horas)
+# Horario de servicio: 8:00 AM a 9:59 PM
 HORARIO_INICIO = 8
-HORARIO_FIN = 22
+HORARIO_FIN = 22  # 22:00 = 10:00 PM, pero el mensaje mostrará hasta 9:59 PM
 
 # Diccionario para controlar el tiempo de espera de usuarios (para /newnum)
 user_last_used = {}
@@ -68,7 +68,7 @@ def obtener_mensaje_fuera_horario():
         "🕒 *FUERA DE HORARIO* 🕒\n"
         "━━━━━━━━━━━━━━━━━━━━━━\n\n"
         f"⏰ *Horario de servicio:*\n"
-        f"   🌅 {HORARIO_INICIO}:00 AM - 🌙 {HORARIO_FIN-1}:59 PM\n\n"
+        f"   🌅 8:00 AM - 🌙 9:59 PM\n\n"
         "📅 *Días:* Lunes a Domingo\n\n"
         "✨ *Reintenta mañana* dentro del horario\n\n"
         "🔒 Estamos descansando. ¡Vuelve pronto!"
@@ -115,7 +115,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "1️⃣ Usa /registrar \"Key que te dio el administrador\"\n"
         "2️⃣ Espera aprobación del admin\n"
         "3️⃣ Una vez aprobado, usa /newnum para solicitar cambios\n\n"
-        f"⏰ *Horario:* {HORARIO_INICIO}:00 AM - {HORARIO_FIN-1}:59 PM\n\n"
+        "⏰ *Horario:* 8:00 AM - 9:59 PM\n\n"
         "🔽 *Selecciona una opción:*",
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=reply_markup
@@ -145,7 +145,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "ℹ️ `/info` - Ver todos los usuarios y días restantes\n\n"
         )
     
-    help_text += f"⏰ *Horario:* 24 horas"
+    help_text += "⏰ *Horario:* 8:00 AM - 9:59 PM"
     
     await update.message.reply_text(help_text, parse_mode=ParseMode.MARKDOWN)
 
@@ -969,7 +969,7 @@ def main():
     app.add_error_handler(error_handler)
     
     print("🤖 Uchiha Config ID Call - Bot iniciado")
-    print("⏰ Horario: 24 horas (modo pruebas)")
+    print("⏰ Horario: 8:00 AM - 9:59 PM")
     print("📋 Sistema de aprobación manual activado")
     print("⏱️ Límite de 10 minutos entre solicitudes")
     print("🆘 Límite de 3 mensajes de soporte cada 30 minutos")
