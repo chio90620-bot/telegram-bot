@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 db = Database()
 
 # Horario de servicio (para pruebas 12 a 12 = 24 horas)
-HORARIO_INICIO = 8
-HORARIO_FIN = 23
+HORARIO_INICIO = 9
+HORARIO_FIN = 22
 
 # Diccionario para controlar el tiempo de espera de usuarios (para /newnum)
 user_last_used = {}
