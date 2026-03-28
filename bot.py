@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 # Inicializar base de datos
 db = Database()
 
-# Horario de servicio: 8:00 AM a 9:59 PM
-HORARIO_INICIO = 8
-HORARIO_FIN = 22  # 22:00 = 10:00 PM, pero el mensaje mostrará hasta 9:59 PM
+# Horario desactivado - siempre disponible
+HORARIO_INICIO = 0
+HORARIO_FIN = 24
 
 # Diccionario para controlar el tiempo de espera de usuarios (para /newnum)
 user_last_used = {}
@@ -31,8 +31,8 @@ user_last_used = {}
 user_soporte_count = {}  # {user_id: [count, first_timestamp]}
 
 def verificar_horario():
-    hora_actual = datetime.now().hour
-    return HORARIO_INICIO <= hora_actual < HORARIO_FIN
+    """Siempre devuelve True - horario desactivado"""
+    return True
 
 def usuario_aprobado(user_id):
     """Verifica si el usuario está aprobado y activo"""
@@ -115,7 +115,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "1️⃣ Usa /registrar \"Key que te dio el administrador\"\n"
         "2️⃣ Espera aprobación del admin\n"
         "3️⃣ Una vez aprobado, usa /newnum para solicitar cambios\n\n"
-        "⏰ *Horario:* 8:00 AM - 9:59 PM\n\n"
+        "⏰ *Horario:* 24/7 (siempre disponible)\n\n"
         "🔽 *Selecciona una opción:*",
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=reply_markup
@@ -129,8 +129,8 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "━━━━━━━━━━━━━━━━━━━━━━\n\n"
         "*Comandos:*\n\n"
         "🔑 `/registrar KEY` - Registrarse\n"
-        " `/permisos` - Ver tiempo restante\n"
-        " `/soporte` - Contactar soporte (3 cada 30 min)\n"
+        "📋 `/permisos` - Ver tiempo restante\n"
+        "🆘 `/soporte` - Contactar soporte (3 cada 30 min)\n"
         "📱 `/newnum 5512345678` - Solicitar cambio\n\n"
     )
     
@@ -145,7 +145,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "ℹ️ `/info` - Ver todos los usuarios y días restantes\n\n"
         )
     
-    help_text += "⏰ *Horario:* 8:00 AM - 9:59 PM"
+    help_text += "⏰ *Horario:* 24/7 (siempre disponible)"
     
     await update.message.reply_text(help_text, parse_mode=ParseMode.MARKDOWN)
 
@@ -315,14 +315,15 @@ async def nuevo_numero(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return
     
-    if not verificar_horario():
-        keyboard = [[InlineKeyboardButton("OK", callback_data="ack_horario")]]
-        await update.message.reply_text(
-            obtener_mensaje_fuera_horario(),
-            parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
-        return
+    # Horario desactivado - siempre permite
+    # if not verificar_horario():
+    #     keyboard = [[InlineKeyboardButton("OK", callback_data="ack_horario")]]
+    #     await update.message.reply_text(
+    #         obtener_mensaje_fuera_horario(),
+    #         parse_mode=ParseMode.MARKDOWN,
+    #         reply_markup=InlineKeyboardMarkup(keyboard)
+    #     )
+    #     return
     
     if not context.args:
         await update.message.reply_text(
@@ -969,7 +970,7 @@ def main():
     app.add_error_handler(error_handler)
     
     print("🤖 Uchiha Config ID Call - Bot iniciado")
-    print("⏰ Horario: 8:00 AM - 9:59 PM")
+    print("⏰ Horario: 24/7 (siempre disponible)")
     print("📋 Sistema de aprobación manual activado")
     print("⏱️ Límite de 10 minutos entre solicitudes")
     print("🆘 Límite de 3 mensajes de soporte cada 30 minutos")
